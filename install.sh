@@ -1,16 +1,20 @@
 #// As root
 apt update
 apt -y install wordpress php libapache2-mod-php mysql-server php-mysql 
+apt -y install curl php-curl zip php-zip php-mbstring php-dom
+apt -y install php-imagemagick imagemagick ghostscript gnuplot graphviz html2ps 
+apt -y install libpcre3 libpcre3-dev libsodium-dev
 mysql -u root  
 CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 GRANT ALL ON wordpress.* TO 'wordpress'@'localhost' IDENTIFIED BY '<DB_PASSWORD>';
 FLUSH PRIVILEGES;
 EXIT;
 systemctl restart apache2
-touch /etc/apache2/sites-available/wordpress.conf
-echo '<Directory /var/www/html/>' >> /etc/apache2/sites-available/wordpress.conf
-echo '    AllowOverride All' >> /etc/apache2/sites-available/wordpress.conf
-echo '<Directory /var/www/html/>' >> /etc/apache2/sites-available/wordpress.conf
+touch /etc/apache2/conf-available/wordpress.conf
+echo '<Directory /var/www/html/>' >> /etc/apache2/conf-available/wordpress.conf
+echo '    AllowOverride All' >> /etc/apache2/conf-available/wordpress.conf
+echo '<Directory /var/www/html/>' >> /etc/apache2/conf-available/wordpress.conf
+ln /etc/apache2/conf-available/wordpress.conf /etc/apache2/conf-enabled/wordpress.conf
 a2enmod rewrite
 systemctl restart apache2
 wget -P /tmp "https://wordpress.org/latest.tar.gz"
